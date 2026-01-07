@@ -1,21 +1,50 @@
 import json
+import json
+
+
+
+
+
+# =============================
+# ======= Language Class ======
+# =============================
+class EnglishLanguage :
+
+    def __init__(self):
+        self.__message = {
+            "menu_choice" : " >>>  ",
+            "login_menu" : ("1.Create new account",
+                            "2.Sign in",
+                            "3.Exit"),
+            "get_username" : "User Name :  ",
+            "get_password" : "Password :  ",
+            "account_created" : "Account Successful Created ✅",
+            "successful_login" : "Login Successful ✅",
+            "false_password" : "Password False ⛔",
+        }
+
+
+    def get(self, key) :
+        return self.__message.get(key, "❗Error :  Key Error ❗")
 
 
 
 
 
 
-# Account class
+
+# ============================
+# ======= Account Class ======
+# ============================
 class Account :
 
-    def __init__(self, username=None, password=None):
-        self.__username = username
-        self.__password = password
+    def __init__(self, lang):
+        self.__lang = lang
     
 
 
     # Load account file
-    def load(self) :
+    def __load(self) :
         '''لود اطلاعات حساب کاربر'''
 
         try :
@@ -40,70 +69,111 @@ class Account :
 
 
 
-    # create new account
-    def create_new(self) :
-        '''ساختاردهی و دخیره'''
+
+    # Create new account
+    def create_account(self) :
+        '''ساخت و دخیره حساب جدید'''
+
+
+        # get inputs
+        username = input(self.__lang.get("get_username"))
+        password = input(self.__lang.get("get_password"))
+
 
         # structure
         info = {
-            "username" : self.__username,
-            "password" : self.__password
+            "username" : username,
+            "password" : password
         }
 
 
         # save
         self.__save(info)
 
+        print(self.__lang.get("account_created"))
 
 
 
+
+    # Sign in to account
+    def sign_in(self) :
+        '''گرفتن رمز و بررسی رمز
+        و در نتیجه ورود'''
+
+
+        # get password to sign in
+        password = input(self.__lang.get("get_password"))
+
+
+        # Load file
+        file = self.__load()
+
+
+        # Check password
+        if password == file['password'] :
+            print(f"{file['username']}, {self.__lang.get("successful_login")}")
+            return True
+
+        else :
+            raise ValueError(self.__lang.get("false_password"))
+    
+
+    
+
+
+
+
+
+# =========================
+# ======= Menu Class ======
+# =========================
+class Menu :
+
+    def __init__(self):
+        self.__lang = EnglishLanguage()
+        self.__Account_obj = Account(self.__lang)
+        
+
+    
+    # Login
+    def __login(self) :
+        '''منوی لاگین (ورودی)'''
+        
+        print("\n\n======================================")
+        print("\n".join(self.__lang.get("login_menu")))
+        print("======================================\n")
+        choice = input(self.__lang.get("menu_choice"))        
+
+        return choice
         
 
 
-                
 
-# Create new account
-def create_account() :
-    '''ساخت و دخیره حساب جدید'''
+    def Run(self) :
+        '''استارت برنامه'''
 
-    # get inputs
-    username = input("User Name :  ")
-    password = input("Password :  ")
+        while True :
 
+            # Login
+            lagin = self.__login()
 
-    ac = Account(username, password)
-    ac.create_new()
-    
+            # create account
+            if lagin == "1" :
+                self.__Account_obj.create_account()
 
+            # sign in account
+            elif lagin == "2" :
+                self.__Account_obj.sign_in()
 
+            elif lagin == "3" :
+                break
 
-
-
-# Sign in to account
-def sign_in() :
-    '''گرفتن رمز و بررسی رمز
-    و در نتیجه ورود'''
-
-
-    # get password to sign in
-    password = input("Enter password :  ")
-
-    # Create object
-    ac = Account(password=password)
+            else :
+                continue
 
 
-    # Load file
-    file = ac.load()
+            
 
 
-    # Check password
-    if password == file['password'] :
-        print(f"{file['username']} Login Successful ✅")
-        return True
-        
-    else :
-        raise ValueError("Password False ⛔")
-    
 
-    
-
+Menu().Run()
