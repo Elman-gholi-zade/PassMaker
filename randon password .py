@@ -305,7 +305,7 @@ class Password :
         are_punctuation = input("Are punctuation ? ").lower() == "y"
 
         try :
-            password_range = int(input(self.__lang.get("answer_with_y/n")))
+            password_range = int(input(self.__lang.get("password_range")))
 
         except ValueError :
             print(self.__lang.get("input_be_int"))
@@ -413,7 +413,7 @@ class Password :
         password = input(self.__lang.get("get_password"))
 
         
-        file[password]  = password
+        file[password_name]  = password
 
         return file
     
@@ -425,8 +425,8 @@ class Password :
 
         print("====================================")
         for name, password in file.items() :
-            print(f"{self.__lang.get("password_name")} : {name}")
-            print(f"{self.__lang.get("get_password")} : {password}")
+            print(f"{self.__lang.get('password_name')} : {name}")
+            print(f"{self.__lang.get('get_password')} : {password}")
         print("====================================")
         
 
